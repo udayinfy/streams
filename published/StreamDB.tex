@@ -1,0 +1,144 @@
+\documentclass[11pt]{article}
+\title{\vspace{-2pc}StreamDB\vspace{-2pc}}
+\author{}
+\date{}
+\pagenumbering{arabic}
+
+\usepackage[left=1in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+  language=Java,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  showlines=true,
+  showstringspaces=false,
+  tabsize=3
+}
+
+\begin{document}
+
+\maketitle
+
+Let's implement a relational database management system! In this system, we manage \textit{tables} consisting of several organizing \textit{columns} and \textit{rows} containing the entries for those columns.
+
+\vspace{1pc}
+
+\setlength{\tabcolsep}{1em}
+\begin{center}
+\begin{tabular}{c | c c c c}
+    \texttt{titles} & SID & Lastname & Firstname & Major \\
+    \hline
+    \multirow{6}{3em}{\texttt{rows}}
+    & 101 & Yao & Alan & Food Systems \\
+    & 102 & Chen & Antares & Literature \\
+    & 103 & Nguyen & Daniel & Parrot Biology \\
+    & 104 & Lee & Maurice & Chemical Engineering \\
+    & 105 & Jian & Lisa & Cosmology \\
+    & 106 & Kim & Sarah & Parrot Biology \\
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}
+class Table {
+    String name;
+    String[] titles;
+    Set<Row> rows;
+
+    Table(String name, String... titles) {
+        this.name = name;
+        this.titles = titles;
+        this.rows = new HashSet<>();
+    }
+
+    class Row {
+        String[] data;
+
+        Row(String... data) {
+            this.data = data;
+        }
+
+        /** Return a new row with the entries specified by COLUMNS. */
+        Row getRow(String... columns) {
+            String[] newData = new String[columns.length];
+            for (int i = 0; i < columns.length; i++) {
+                int rowIndex = getColumnIndex(columns[i]);
+                newData[i] = data[rowIndex];
+            }
+            return new Row(newData);
+        }
+    }
+
+    /** Add multiple ROWSTOADD to this table and return this table. */
+    Table addAll(Stream<Row> rowsToAdd) {
+        rowsToAdd.forEach(rows::add);
+        return this;
+    }
+
+    /** Return a table containing new rows where PRED is true. */
+    Table select(Predicate<Row> pred) {
+        return new Table(name, titles).
+    }
+
+    /** Return a table of rows consisting of COLUMNS from this table. */
+    Table select(String... columns) {
+        return
+    }
+
+    /** Return a table containing new rows from first applying PRED and
+     *  then selecting the remaining COLUMNS. */
+    Table select(Predicate<Row> pred, String... columns) {
+        return new Table(name, columns).
+
+    }
+
+    /** Return a stream of rows applying PRED then SELECTOR to each. */
+    Stream<Row> select(Predicate<Row> pred, Function<Row,Row> selector) {
+        return rows.stream().
+
+    }
+
+    /** Return a list of strings by applying GETTER to each row. */
+    List<String> export(Function<Row,String> getter) {
+        return
+    }
+
+    /** Return a list of strings from rows applying PRED then GETTER. */
+    List<String> export(Predicate<Row> pred,Function<Row,String> getter) {
+        return rows.stream().
+
+
+
+    }
+
+    /** Return a map of strings to results grouped according to GROUPER
+     *  and with values selected by GETTER. */
+    Map<String, List<String>> exportBy(
+            Function<Row,String> grouper, Function<Row,String> getter) {
+        return
+    }
+
+    /** Return a map of strings to results where the row satisfies PRED,
+     *  grouped according to GROUPER, and values selected by GETTER. */
+    Map<String, List<String>> exportBy(Predicate<Row> pred,
+            Function<Row,String> grouper, Function<Row,String> getter) {
+        return rows.stream().
+
+
+
+    }
+}
+\end{lstlisting}
+
+\end{document}
